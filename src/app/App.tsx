@@ -7,9 +7,9 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Текст писать тут
-        </p>
+        <p>Цель: научиться создавать приложения на React.js</p>
+        <p>Владею технологиями: Java, Spring Framework, SQL, Spring Boot, Apache Storm, Hibernate...</p>
+        <p>О себе: Маслёнченко Илья, 48 лет. Работаю в компании МТС WebServices Java-разработчиком 5 лет.</p>
       </header>
     </div>
   );
