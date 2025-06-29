@@ -1,56 +1,83 @@
-/**
- * Функции написанные здесь пригодятся на последующих уроках
- * С помощью этих функций мы будем добавлять элементы в список для проверки динамической загрузки
- * Поэтому в идеале чтобы функции возвращали случайные данные, но в то же время не абракадабру.
- * В целом сделайте так, как вам будет удобно.
- * */
+type Category = {
+  id: string;
+  name: string;
+  photo?: string;
+};
 
-/**
- * Нужно создать тип Category, он будет использоваться ниже.
- * Категория содержит
- * - id (строка)
- * - name (строка)
- * - photo (строка, необязательно)
- *
- * Продукт (Product) содержит
- * - id (строка)
- * - name (строка)
- * - photo (строка)
- * - desc (строка, необязательно)
- * - createdAt (строка)
- * - oldPrice (число, необязательно)
- * - price (число)
- * - category (Категория)
- *
- * Операция (Operation) может быть либо тратой (Cost), либо доходом (Profit)
- *
- * Трата (Cost) содержит
- * - id (строка)
- * - name (строка)
- * - desc (строка, необязательно)
- * - createdAt (строка)
- * - amount (число)
- * - category (Категория)
- * - type ('Cost')
- *
- * Доход (Profit) содержит
- * - id (строка)
- * - name (строка)
- * - desc (строка, необязательно)
- * - createdAt (строка)
- * - amount (число)
- * - category (Категория)
- * - type ('Profit')
- * */
+type Product = {
+  id: string;
+  name: string;
+  photo: string;
+  desc?: string;
+  createdAt: string;
+  oldPrice?: number;
+  price: number;
+  category: Category;
+};
 
-/**
- * Создает случайный продукт (Product).
- * Принимает дату создания (строка)
- * */
-// export const createRandomProduct = (createdAt: string) => {};
+type Operation = Cost | Profit;
 
-/**
- * Создает случайную операцию (Operation).
- * Принимает дату создания (строка)
- * */
-// export const createRandomOperation = (createdAt: string) => {};
+type Cost = {
+  id: string;
+  name: string;
+  desc?: string;
+  createdAt: string;
+  amount: number;
+  category: Category;
+  type: 'Cost';
+};
+
+type Profit = {
+  id: string;
+  name: string;
+  desc?: string;
+  createdAt: string;
+  amount: number;
+  category: Category;
+  type: 'Profit';
+};
+
+// Функция для генерации случайного идентификатора
+const generateRandomId = () => Math.random().toString(36).substring(2, 15);
+
+// Функция для генерации случайного названия
+const generateRandomName = () => `Name-${Math.random().toString(36).substring(2, 7)}`;
+
+// Функция для генерации случайной категории
+const generateRandomCategory = (): Category => ({
+  id: generateRandomId(),
+  name: generateRandomName(),
+  photo: `https://example.com/photo/${generateRandomId()}.jpg`
+});
+
+// Создание случайного продукта
+export const createRandomProduct = (createdAt: string): Product => {
+  const category = generateRandomCategory();
+  const productName = generateRandomName();
+  return {
+    id: generateRandomId(),
+    name: productName,
+    photo: `https://example.com/photo/${generateRandomId()}.jpg`,
+    desc: productName + ' description',
+    createdAt,
+    price: Math.random() * 100,
+    oldPrice: Math.random() > 0.5 ? Math.random() * 100 : undefined,
+    category
+  };
+};
+
+// Создание случайной операции
+export const createRandomOperation = (createdAt: string): Operation => {
+  const category = generateRandomCategory();
+  const isCost = Math.random() > 0.5;
+  const categoryName = generateRandomName();
+  return {
+    id: generateRandomId(),
+    name: categoryName,
+    desc: categoryName + ' description',
+    createdAt,
+    amount: Math.random() * 1000,
+    category,
+    type: isCost ? 'Cost' : 'Profit'
+  };
+};
