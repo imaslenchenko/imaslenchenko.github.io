@@ -8,7 +8,7 @@ export const addPlus = (string: string): string => `+${string}`;
 
 export const removeFirstZeros = (value: string): string => value.replace(/^(-)?[0]+(-?\d+.*)$/, '$1$2');
 
-export const getBeautifulNumber = (value: number | string, separator = ' '): string | undefined =>
+export const getBeautifulNumber = (value: number | string, separator = ' '): string =>
   value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, separator);
 
 export const round = (value: number, accuracy = 2): number => {
@@ -19,7 +19,12 @@ export const round = (value: number, accuracy = 2): number => {
 const transformRegexp =
   /(matrix\(-?\d+(\.\d+)?, -?\d+(\.\d+)?, -?\d+(\.\d+)?, -?\d+(\.\d+)?, )(-?\d+(\.\d+)?), (-?\d+(\.\d+)?)\)/;
 
-export const getTransformFromCss = (transformCssString: string): { x: number; y: number } => {
+export type TransformResult = {
+  x: number;
+  y: number;
+}
+
+export const getTransformFromCss = (transformCssString: string): TransformResult => {
   const data = transformCssString.match(transformRegexp);
   if (!data) return { x: 0, y: 0 };
   return {
@@ -37,8 +42,10 @@ export const getContrastType = (contrastValue: number): 'black' | 'white' => (co
 export const shortColorRegExp = /^#[0-9a-f]{3}$/i;
 export const longColorRegExp = /^#[0-9a-f]{6}$/i;
 
-export const checkColor = (color: string): void => {
-  if (!longColorRegExp.test(color) && !shortColorRegExp.test(color)) throw new Error(`invalid hex color: ${color}`);
+export const checkColor = (color: string): void | Error => {
+  if (!longColorRegExp.test(color) && !shortColorRegExp.test(color)) {
+    throw new Error(`invalid hex color: ${color}`);
+  }
 };
 
 export const hex2rgb = (color: string): [number, number, number] => {
@@ -55,11 +62,28 @@ export const hex2rgb = (color: string): [number, number, number] => {
   return [red, green, blue];
 };
 
-export const getNumberedArray = (arr: number[]): { value: number; number: number }[] => arr.map((value, number) => ({ value, number }));
-export const toStringArray = (arr: { value: number; number: number }[]): string[] => arr.map(({ value, number }) => `${value}_${number}`);
+type Item = {
+  value: any;
+  number: number;
+};
+
+export const getNumberedArray = (arr: any[]): Item[] => {
+  return arr.map((value, number) => ({ value, number }));
+};
+
+export const toStringArray = (arr: Item[]): string[] => {
+  return arr.map(({ value, number }) => `${value}_${number}`);
+};
+
+type Customer = {
+  id: number;
+  name: string;
+  age: number;
+  isSubscribed: boolean;
+}
 
 export const transformCustomers = (
-  customers: { id: number; name: string; age: number; isSubscribed: boolean }[]
+  customers: Customer[]
 ): Record<number, { name: string; age: number; isSubscribed: boolean }> => {
   return customers.reduce((acc, customer) => {
     acc[customer.id] = { name: customer.name, age: customer.age, isSubscribed: customer.isSubscribed };
